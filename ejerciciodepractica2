@@ -1,17 +1,26 @@
 #include <iostream>
-#include <string>
+#include <cstring> // Para strcpy
 using namespace std;
 
 const int TAM = 3;
-
+//Arrays: usamos un array precios[6] para guardar los precios de cada tipo de lombriz.
+//Matriz 3x3
+/*Para cargar datos (cargarPrecios, cargarGranja) las funciones que deberia usar tienen que: 
+validar valores-mostrar la matriz-sumar la línea que más lombrices tiene (sumaMaxima)
+Validar los datos para evitar errores.-Ciclo interno para permitir ingresar muchas granjas.
+Cálculo de importe para cada granja según su tipo y cantidad cosechada.
+Selección de la granja con mayor producción. */
+//Usa char nombre[50] para cargar el nombre de la granja
+//Usa char granjaMayor[50] para guardar la granja con más producción
+//generar funciones fuera del main para llamarlas desde cualquier parte 
 // Función para validar un número dentro de un rango
-int validarRango(string mensaje, int min, int max) {
+int validarRango(const char mensaje[], int min, int max) {
     int valor;
     do {
         cout << mensaje;
         cin >> valor;
         if (valor < min || valor > max) {
-            cout << "Valor inválido. Debe estar entre " << min << " y " << max << "." << endl;
+            cout << "lo que pusiste es invalido, Deberia estar entre " << min << " y " << max << "." << endl;
         }
     } while (valor < min || valor > max);
     return valor;
@@ -20,16 +29,16 @@ int validarRango(string mensaje, int min, int max) {
 // Función para cargar precios de lombrices
 void cargarPrecios(float precios[], int cantidad) {
     for (int i = 0; i < cantidad; i++) {
-        cout << "Ingrese el precio para el tipo de lombriz " << (i + 1) << ": $";
+        cout << "hola, porfavor ingrese el precio para el tipo de lombriz " << (i + 1) << ": $";
         cin >> precios[i];
     }
 }
 
-// Función para cargar una granja
+// por aca la función para cargar una granja
 void cargarGranja(int granja[TAM][TAM]) {
     for (int i = 0; i < TAM; i++) {
         for (int j = 0; j < TAM; j++) {
-            cout << "Ingrese cantidad de lombrices en celda [" << i << "][" << j << "]: ";
+            cout << "porfavor ingrese la cantidad de lombrices en celda [" << i << "][" << j << "]: ";
             cin >> granja[i][j];
         }
     }
@@ -37,7 +46,7 @@ void cargarGranja(int granja[TAM][TAM]) {
 
 // Función para mostrar la matriz
 void mostrarGranja(int granja[TAM][TAM]) {
-    cout << "\nMatriz de la granja:\n";
+    cout << "\nesta es la Matriz de la granja:\n";
     for (int i = 0; i < TAM; i++) {
         for (int j = 0; j < TAM; j++) {
             cout << granja[i][j] << "\t";
@@ -61,17 +70,18 @@ int main() {
     int granja[TAM][TAM];
     int opcion;
 
-    string granjaMayor;
+    char granjaMayor[50] = "Ninguna";
     int produccionMayor = 0;
 
     do {
-        cout << "\n===== MENÚ =====" << endl;
-        cout << "1. Cargar precios de lombrices" << endl;
-        cout << "2. Análisis de granjas" << endl;
-        cout << "3. Salir" << endl;
-        cout << "Seleccione una opción: ";
+        cout << "\n===== Bienvenido ! este es su menú =====" << endl;
+        cout << "1. Cargar los precios de las lombrices" << endl;
+        cout << "2. Análisis de las granjas" << endl;
+        cout << "3. toque para Salir" << endl;
+        cout << "porfavor, Seleccione una opción: ";
         cin >> opcion;
-
+//selecciono una estructura de seleccion multiple en este caso un switch y case 
+//estructura normal de un switch es switch, case breack y default 
         switch (opcion) {
             case 1:
                 cargarPrecios(precios, 6);
@@ -80,50 +90,50 @@ int main() {
             case 2: {
                 char continuar;
                 do {
-                    string nombre;
-                    cout << "\nIngrese el nombre de la granja: ";
-                    cin.ignore(); // Limpiar buffer
-                    getline(cin, nombre);
+                    char nombre[50];
+                    cout << "\nporfavor, ingrese el nombre de la granja: ";
+                    cin.ignore(); // Limpiar el buffer
+                    cin.getline(nombre, 50);
 
                     int tipo = validarRango("Ingrese tipo de lombriz (1 a 6): ", 1, 6);
                     cargarGranja(granja);
                     mostrarGranja(granja);
 
-                    int fila = validarRango("Ingrese fila de referencia (0 a 2): ", 0, 2);
-                    int col = validarRango("Ingrese columna de referencia (0 a 2): ", 0, 2);
+                    int fila = validarRango("ahora Ingrese la fila de referencia (0 a 2): ", 0, 2);
+                    int col = validarRango("Ingrese porfavor la columna de referencia (0 a 2): ", 0, 2);
 
                     int maxLombrices = sumaMaxima(granja, fila, col);
                     float importe = maxLombrices * precios[tipo - 1];
 
                     cout << "\nGranja: " << nombre << endl;
-                    cout << "Máximo de lombrices cosechadas: " << maxLombrices << endl;
-                    cout << "Precio por lombriz: $" << precios[tipo - 1] << endl;
-                    cout << "Importe total a pagar: $" << importe << endl;
+                    cout << "Máximo de lombrices que fueron cosechadas: " << maxLombrices << endl;
+                    cout << "El precio por lombriz: $" << precios[tipo - 1] << endl;
+                    cout << "este es el precio o importe total a pagar: $" << importe << endl;
 
-                    // Verificar si esta granja es la de mayor producción
+                    //por aca se deberia poder  Verificar si esta es la  granja de mayor producción
                     if (maxLombrices > produccionMayor) {
                         produccionMayor = maxLombrices;
-                        granjaMayor = nombre;
+                        strcpy(granjaMayor, nombre); // con el strcpy se deberia poder copiar nombre
                     }
 
-                    cout << "\n¿Desea ingresar otra granja? (s/n): ";
+                    cout << "\n¿le gustaria ingresar otra granja? (s/n): ";
                     cin >> continuar;
                 } while (continuar == 's' || continuar == 'S');
 
-                // Mostrar resultado final
-                if (!granjaMayor.empty()) {
-                    cout << "\nLa granja con mayor producción fue: " << granjaMayor
+                // por esta parte se tiene que Mostrar resultado final
+                if (strcmp(granjaMayor, "Ninguna") != 0) {
+                    cout << "\nEn este caso, la granja con mayor producción fue: " << granjaMayor
                          << " con " << produccionMayor << " lombrices cosechadas." << endl;
                 }
                 break;
             }
 
             case 3:
-                cout << "Saliendo del programa. ¡Hasta luego!" << endl;
+                cout << "Saliendo de este programa, muchas gracias" << endl;
                 break;
 
             default:
-                cout << "Opción inválida. Intente nuevamente." << endl;
+                cout << "la opcion que ingreso no es valida porfavor ingrese otra opcion " << endl;
         }
     } while (opcion != 3);
 
