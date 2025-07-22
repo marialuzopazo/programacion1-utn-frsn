@@ -1,0 +1,120 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+double calcularArea(string tipo, double valor1, double valor2 = 0) {
+    if (tipo == "Triangulo") {
+        return (valor1 * valor2) / 2;
+    } else if (tipo == "Cuadrado") {
+        return valor1 * valor1;
+    } else if (tipo == "Rectangulo") {
+        return valor1 * valor2;
+    } else {
+        return 0;
+    }
+}
+
+long long convertirAMilisegundos(int dias, int horas, int minutos, int segundos) {
+    return (long long)dias * 86400000 +
+           (long long)horas * 3600000 +
+           (long long)minutos * 60000 +
+           (long long)segundos * 1000;
+}
+
+vector<int> ordenarMatriz(vector<int> matriz, string orden) {
+    for (int i = 0; i < matriz.size() - 1; i++) {
+        for (int j = 0; j < matriz.size() - i - 1; j++) {
+            if ((orden == "Asc" && matriz[j] > matriz[j + 1]) ||
+                (orden == "Desc" && matriz[j] < matriz[j + 1])) {
+                int temp = matriz[j];
+                matriz[j] = matriz[j + 1];
+                matriz[j + 1] = temp;
+            }
+        }
+    }
+    return matriz;
+}
+
+int main() {
+    int opcion;
+    do {
+        cout << "\n======== MENU ========" << endl;
+        cout << "1. Calcular área de un polígono" << endl;
+        cout << "2. Convertir tiempo a milisegundos" << endl;
+        cout << "3. Ordenar matriz de números" << endl;
+        cout << "4. Finalizar programa" << endl;
+        cout << "======================" << endl;
+        cout << "Selecciona una opción: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1: {
+                double base, altura, lado, largo, ancho;
+
+                // Triángulo
+                cout << "\n=== Triángulo ===" << endl;
+                cout << "Ingresa la base: ";
+                cin >> base;
+                cout << "Ingresa la altura: ";
+                cin >> altura;
+                cout << "Área del Triángulo: " << calcularArea("Triangulo", base, altura) << endl;
+
+                // Cuadrado
+                cout << "\n=== Cuadrado ===" << endl;
+                cout << "Ingresa el lado: ";
+                cin >> lado;
+                cout << "Área del Cuadrado: " << calcularArea("Cuadrado", lado) << endl;
+
+                // Rectángulo
+                cout << "\n=== Rectángulo ===" << endl;
+                cout << "Ingresa el largo: ";
+                cin >> largo;
+                cout << "Ingresa el ancho: ";
+                cin >> ancho;
+                cout << "Área del Rectángulo: " << calcularArea("Rectangulo", largo, ancho) << endl;
+                break;
+            }
+            case 2: {
+                int dias, horas, minutos, segundos;
+                cout << "Ingresa los días: ";
+                cin >> dias;
+                cout << "Ingresa las horas: ";
+                cin >> horas;
+                cout << "Ingresa los minutos: ";
+                cin >> minutos;
+                cout << "Ingresa los segundos: ";
+                cin >> segundos;
+                long long milisegundos = convertirAMilisegundos(dias, horas, minutos, segundos);
+                cout << "El tiempo total en milisegundos es: " << milisegundos << " ms" << endl;
+                break;
+            }
+            case 3: {
+                int cantidad;
+                cout << "Ingresa la cantidad de números: ";
+                cin >> cantidad;
+                vector<int> matriz(cantidad);
+                for (int i = 0; i < cantidad; i++) {
+                    cout << "Número " << i + 1 << ": ";
+                    cin >> matriz[i];
+                }
+                string orden;
+                cout << "¿Deseas ordenarlos en 'Asc' o 'Desc'? ";
+                cin >> orden;
+                vector<int> matrizOrdenada = ordenarMatriz(matriz, orden);
+                cout << "Matriz ordenada (" << orden << "): ";
+                for (int num : matrizOrdenada) {
+                    cout << num << " ";
+                }
+                cout << endl;
+                break;
+            }
+            case 4:
+                cout << "Programa finalizado. ¡Adiós!" << endl;
+                break;
+            default:
+                cout << "Opción no válida. Intenta de nuevo." << endl;
+        }
+    } while (opcion != 4);
+    return 0;
+}
