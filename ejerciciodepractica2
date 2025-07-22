@@ -1,0 +1,131 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+const int TAM = 3;
+
+// Función para validar un número dentro de un rango
+int validarRango(string mensaje, int min, int max) {
+    int valor;
+    do {
+        cout << mensaje;
+        cin >> valor;
+        if (valor < min || valor > max) {
+            cout << "Valor inválido. Debe estar entre " << min << " y " << max << "." << endl;
+        }
+    } while (valor < min || valor > max);
+    return valor;
+}
+
+// Función para cargar precios de lombrices
+void cargarPrecios(float precios[], int cantidad) {
+    for (int i = 0; i < cantidad; i++) {
+        cout << "Ingrese el precio para el tipo de lombriz " << (i + 1) << ": $";
+        cin >> precios[i];
+    }
+}
+
+// Función para cargar una granja
+void cargarGranja(int granja[TAM][TAM]) {
+    for (int i = 0; i < TAM; i++) {
+        for (int j = 0; j < TAM; j++) {
+            cout << "Ingrese cantidad de lombrices en celda [" << i << "][" << j << "]: ";
+            cin >> granja[i][j];
+        }
+    }
+}
+
+// Función para mostrar la matriz
+void mostrarGranja(int granja[TAM][TAM]) {
+    cout << "\nMatriz de la granja:\n";
+    for (int i = 0; i < TAM; i++) {
+        for (int j = 0; j < TAM; j++) {
+            cout << granja[i][j] << "\t";
+        }
+        cout << endl;
+    }
+}
+
+// Función que calcula la suma máxima entre fila y columna de la celda de referencia
+int sumaMaxima(int granja[TAM][TAM], int fila, int col) {
+    int sumaH = 0, sumaV = 0;
+    for (int i = 0; i < TAM; i++) {
+        sumaH += granja[fila][i]; // Horizontal
+        sumaV += granja[i][col];  // Vertical
+    }
+    return (sumaH > sumaV) ? sumaH : sumaV;
+}
+
+int main() {
+    float precios[6] = {0};
+    int granja[TAM][TAM];
+    int opcion;
+
+    string granjaMayor;
+    int produccionMayor = 0;
+
+    do {
+        cout << "\n===== MENÚ =====" << endl;
+        cout << "1. Cargar precios de lombrices" << endl;
+        cout << "2. Análisis de granjas" << endl;
+        cout << "3. Salir" << endl;
+        cout << "Seleccione una opción: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                cargarPrecios(precios, 6);
+                break;
+
+            case 2: {
+                char continuar;
+                do {
+                    string nombre;
+                    cout << "\nIngrese el nombre de la granja: ";
+                    cin.ignore(); // Limpiar buffer
+                    getline(cin, nombre);
+
+                    int tipo = validarRango("Ingrese tipo de lombriz (1 a 6): ", 1, 6);
+                    cargarGranja(granja);
+                    mostrarGranja(granja);
+
+                    int fila = validarRango("Ingrese fila de referencia (0 a 2): ", 0, 2);
+                    int col = validarRango("Ingrese columna de referencia (0 a 2): ", 0, 2);
+
+                    int maxLombrices = sumaMaxima(granja, fila, col);
+                    float importe = maxLombrices * precios[tipo - 1];
+
+                    cout << "\nGranja: " << nombre << endl;
+                    cout << "Máximo de lombrices cosechadas: " << maxLombrices << endl;
+                    cout << "Precio por lombriz: $" << precios[tipo - 1] << endl;
+                    cout << "Importe total a pagar: $" << importe << endl;
+
+                    // Verificar si esta granja es la de mayor producción
+                    if (maxLombrices > produccionMayor) {
+                        produccionMayor = maxLombrices;
+                        granjaMayor = nombre;
+                    }
+
+                    cout << "\n¿Desea ingresar otra granja? (s/n): ";
+                    cin >> continuar;
+                } while (continuar == 's' || continuar == 'S');
+
+                // Mostrar resultado final
+                if (!granjaMayor.empty()) {
+                    cout << "\nLa granja con mayor producción fue: " << granjaMayor
+                         << " con " << produccionMayor << " lombrices cosechadas." << endl;
+                }
+                break;
+            }
+
+            case 3:
+                cout << "Saliendo del programa. ¡Hasta luego!" << endl;
+                break;
+
+            default:
+                cout << "Opción inválida. Intente nuevamente." << endl;
+        }
+    } while (opcion != 3);
+
+    return 0;
+}
